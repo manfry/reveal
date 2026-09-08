@@ -6,8 +6,8 @@ const CONFIG={
   texts:{
     title:"Il grande momento sta arrivando…",
     subtitle:"Manca sempre meno per scoprire chi sta arrivando!",
-    maleResult:"È un maschietto!",
-    femaleResult:"È una femminuccia!",
+    maleResult:"Maschietto!",
+    femaleResult:"Femminuccia!",
     maleMessage:"Una nuova piccola avventura sta per cominciare.",
     femaleMessage:"Una nuova piccola avventura sta per cominciare."
   }
