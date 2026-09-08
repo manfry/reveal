@@ -1,205 +1,235 @@
-:root {
-    --bg-color-1: #e0f2fe; /* Azzurro tenue */
-    --bg-color-2: #fce7f3; /* Rosa tenue */
-    --card-bg: rgba(255, 255, 255, 0.75);
-    --text-color: #334155;
-    --accent-blue: #38bdf8;
-    --accent-pink: #f472b6;
-}
+/* ==========================================
+   CONFIGURAZIONE (Modifica qui i parametri)
+   ========================================== */
+// Data e ora di scadenza del countdown (Formato: "AAAA-MM-DDTHH:MM:SS")
+const TARGET_DATE = "2026-12-31T18:00:00"; 
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+// Genere: "male" per Maschietto, "female" per Femminuccia
+const GENDER = "male"; 
+/* ========================================== */
 
-body {
-    font-family: 'Montserrat', sans-serif;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2));
-    overflow: hidden;
-    color: var(--text-color);
-    transition: background 1.5s ease;
-}
+// Elementi DOM
+const daysEl = document.getElementById('days');
+const hoursEl = document.getElementById('hours');
+const minutesEl = document.getElementById('minutes');
+const secondsEl = document.getElementById('seconds');
+const countdownContainer = document.getElementById('countdown-container');
+const revealContainer = document.getElementById('reveal-container');
+const revealBtn = document.getElementById('reveal-btn');
+const resultContainer = document.getElementById('result-container');
+const resultText = document.getElementById('result-text');
+const mainTitle = document.getElementById('main-title');
+const subtitle = document.getElementById('subtitle');
+const mainCard = document.getElementById('main-card');
 
-/* Canvas sfondi */
-#bg-canvas, #confetti-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 1;
-}
+// Sfondo Animato con Particelle Rosa/Azzurre
+const bgCanvas = document.getElementById('bg-canvas');
+const bgCtx = bgCanvas.getContext('2d');
+let particles = [];
 
-#confetti-canvas {
-    z-index: 10;
+function resizeBgCanvas() {
+    bgCanvas.width = window.innerWidth;
+    bgCanvas.height = window.innerHeight;
 }
+window.addEventListener('resize', resizeBgCanvas);
+resizeBgCanvas();
 
-/* Container & Card */
-.container {
-    position: relative;
-    z-index: 5;
-    width: 90%;
-    max-width: 650px;
-    padding: 20px;
-}
-
-.glass-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
-    border-radius: 24px;
-    padding: 40px 30px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-    text-align: center;
-    transition: all 1s ease;
-}
-
-h1 {
-    font-size: clamp(1.5rem, 3vw, 2.2rem);
-    font-weight: 700;
-    margin-bottom: 10px;
-    color: #1e293b;
-}
-
-.subtitle {
-    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
-    color: #64748b;
-    margin-bottom: 35px;
-    font-weight: 300;
-}
-
-/* Countdown Grid */
-.countdown-grid {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 20px;
-}
-
-.time-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.6);
-    padding: 15px 10px;
-    border-radius: 14px;
-    min-width: 75px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-}
-
-.time-value {
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 700;
-    color: #1e293b;
-    line-height: 1.1;
-}
-
-.time-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #64748b;
-    margin-top: 5px;
-}
-
-.separator {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #94a3b8;
-    margin-top: -15px;
-}
-
-/* Pulsante SCOPRI con effetto Glow */
-.hidden {
-    display: none !important;
-}
-
-#reveal-container {
-    margin-top: 25px;
-    animation: fadeIn 1s ease;
-}
-
-.glow-button {
-    background: linear-gradient(135deg, #a855f7, #ec4899);
-    border: none;
-    color: white;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    padding: 15px 50px;
-    border-radius: 50px;
-    cursor: pointer;
-    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
-    animation: pulseGlow 2s infinite;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.glow-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
-}
-
-.glow-button:active {
-    transform: scale(0.98);
-}
-
-@keyframes pulseGlow {
-    0% {
-        box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+class Particle {
+    constructor(isRevealTheme = false, colorOverride = null) {
+        this.reset(isRevealTheme, colorOverride);
     }
-    50% {
-        box-shadow: 0 0 30px rgba(236, 72, 153, 0.9), 0 0 50px rgba(168, 85, 247, 0.5);
+    reset(isRevealTheme = false, colorOverride = null) {
+        this.x = Math.random() * bgCanvas.width;
+        this.y = Math.random() * bgCanvas.height;
+        this.size = Math.random() * 4 + 2;
+        this.speedY = (Math.random() * 0.8 + 0.2) * -1; // Salgono verso l'alto delicatamente
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.alpha = Math.random() * 0.5 + 0.2;
+        
+        if (colorOverride) {
+            this.color = colorOverride;
+        } else if (isRevealTheme) {
+            this.color = GENDER === 'male' ? '#38bdf8' : '#f472b6';
+        } else {
+            this.color = Math.random() > 0.5 ? '#38bdf8' : '#f472b6';
+        }
     }
-    100% {
-        box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+    update(isRevealTheme = false, colorOverride = null) {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        if (this.y < 0) {
+            this.reset(isRevealTheme, colorOverride);
+            this.y = bgCanvas.height + 10;
+        }
+    }
+    draw() {
+        bgCtx.save();
+        bgCtx.globalAlpha = this.alpha;
+        bgCtx.fillStyle = this.color;
+        bgCtx.beginPath();
+        bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        bgCtx.fill();
+        bgCtx.restore();
     }
 }
 
-/* Risultato Finale */
-.result-title {
-    font-family: 'Great Vibes', cursive;
-    font-size: clamp(4rem, 10vw, 7rem);
-    animation: scaleUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    margin-top: 10px;
+// Inizializza 50 particelle
+for (let i = 0; i < 50; i++) {
+    particles.push(new Particle());
 }
 
-@keyframes scaleUp {
-    0% {
-        transform: scale(0);
-        opacity: 0;
+function animateBg() {
+    bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+    requestAnimationFrame(animateBg);
+}
+animateBg();
+
+
+// Gestione Countdown
+let countdownFinished = false;
+
+function updateCountdown() {
+    if (countdownFinished) return;
+
+    const now = new Date().getTime();
+    const targetTime = new Date(TARGET_DATE).getTime();
+    const distance = targetTime - now;
+
+    if (distance <= 0) {
+        countdownFinished = true;
+        countdownContainer.classList.add('hidden');
+        revealContainer.classList.remove('hidden');
+        mainTitle.innerText = "Il momento è arrivato!";
+        subtitle.innerText = "Clicca per scoprire chi c'è nel pancione!";
+        return;
     }
-    100% {
-        transform: scale(1);
-        opacity: 1;
+
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    daysEl.innerText = String(days).padStart(2, '0');
+    hoursEl.innerText = String(hours).padStart(2, '0');
+    minutesEl.innerText = String(minutes).padStart(2, '0');
+    secondsEl.innerText = String(seconds).padStart(2, '0');
+}
+
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+
+// Gestione Click su SCOPRI e Rivelazione
+revealBtn.addEventListener('click', () => {
+    revealContainer.classList.add('hidden');
+    subtitle.classList.add('hidden');
+    
+    // Cambia gradiente dello sfondo del body in base al sesso
+    if (GENDER === 'male') {
+        document.body.style.background = "linear-gradient(135deg, #bae6fd, #7dd3fc)";
+        resultText.innerText = "Maschietto!";
+        resultText.style.color = "#0284c7";
+    } else {
+        document.body.style.background = "linear-gradient(135deg, #fbcfe8, #f472b6)";
+        resultText.innerText = "Femminuccia!";
+        resultText.style.color = "#db2777";
+    }
+
+    mainTitle.innerText = "È una gioia immensa annunciare che...";
+    resultContainer.classList.remove('hidden');
+
+    // Aggiorna le particelle di sfondo con il colore definitivo
+    particles.forEach(p => p.reset(true));
+
+    // Lancia i coriandoli
+    startConfetti();
+});
+
+
+// Sistema di Coriandoli nativo via Canvas
+const confettiCanvas = document.getElementById('confetti-canvas');
+const ctx = confettiCanvas.getContext('2d');
+let confettiParticles = [];
+
+function resizeConfettiCanvas() {
+    confettiCanvas.width = window.innerWidth;
+    confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeConfettiCanvas);
+resizeConfettiCanvas();
+
+class Confetti {
+    constructor() {
+        this.reset();
+    }
+    reset() {
+        this.x = window.innerWidth / 2; // Esplosione dal centro
+        this.y = window.innerHeight / 2;
+        this.size = Math.random() * 8 + 4;
+        this.speedX = (Math.random() - 0.5) * 20;
+        this.speedY = (Math.random() - 0.5) * 20 - 5;
+        this.gravity = 0.4;
+        this.rotation = Math.random() * 360;
+        this.rotationSpeed = (Math.random() - 0.5) * 10;
+        
+        // Colori in base al tema
+        if (GENDER === 'male') {
+            this.color = ['#0284c7', '#38bdf8', '#7dd3fc', '#ffffff', '#e0f2fe'][Math.floor(Math.random() * 5)];
+        } else {
+            this.color = ['#db2777', '#f472b6', '#fbcfe8', '#ffffff', '#ffe4e6'][Math.floor(Math.random() * 5)];
+        }
+        this.alpha = 1;
+        this.decay = Math.random() * 0.01 + 0.005;
+    }
+    update() {
+        this.speedY += this.gravity;
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.rotation += this.rotationSpeed;
+        
+        // Aggiunge attrito orizzontale
+        this.speedX *= 0.96;
+
+        if (this.y > window.innerHeight) {
+            // Se toccano il fondo, rallentano/spariscono
+            this.alpha -= 0.02;
+        }
+    }
+    draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size * 0.6);
+        ctx.restore();
     }
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+function startConfetti() {
+    // Genera un'esplosione iniziale massiccia
+    for (let i = 0; i < 150; i++) {
+        confettiParticles.push(new Confetti());
+    }
 
-/* Responsive per smartphone */
-@media (max-width: 480px) {
-    .glass-card {
-        padding: 25px 15px;
+    function animateConfetti() {
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+        
+        confettiParticles.forEach((p, index) => {
+            p.update();
+            p.draw();
+            if (p.alpha <= 0) {
+                confettiParticles.splice(index, 1);
+            }
+        });
+
+        if (confettiParticles.length > 0) {
+            requestAnimationFrame(animateConfetti);
+        }
     }
-    .countdown-grid {
-        gap: 8px;
-    }
-    .time-box {
-        min-width: 60px;
-        padding: 10px 5px;
-    }
-    .separator {
-        font-size: 1.5rem;
-    }
+    animateConfetti();
 }
