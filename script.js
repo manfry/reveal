@@ -16,7 +16,7 @@
  */
 
 const CONFIG = {
-  revealDate: "2026-12-25T20:00:00",
+  revealDate: "2026-09-08T18:20:00",
   gender: "male",
 
   texts: {
