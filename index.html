@@ -1,68 +1,47 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#eaf5ff">
-  <title>Il grande momento</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gender Reveal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="ambient ambient-left"></div>
-  <div class="ambient ambient-right"></div>
-
   <main class="page">
-    <section class="reveal-card" id="revealCard" aria-live="polite">
-      <div class="decor decor-one">✦</div>
-      <div class="decor decor-two">✧</div>
-      <div class="decor decor-three">♡</div>
+    <section class="card">
+      <div class="decor d1">✦</div><div class="decor d2">✧</div><div class="decor d3">♡</div>
 
-      <div class="intro" id="intro">
+      <div id="intro">
         <p class="eyebrow">Il grande momento</p>
-        <h1 id="title">Il grande momento sta arrivando…</h1>
-        <p class="subtitle" id="subtitle">
-          Manca sempre meno per scoprire chi sta arrivando!
-        </p>
-
-        <div class="countdown" id="countdown" aria-label="Conto alla rovescia">
-          <div class="time-box">
-            <span class="time-value" id="days">00</span>
-            <span class="time-label">giorni</span>
-          </div>
-          <span class="separator">:</span>
-          <div class="time-box">
-            <span class="time-value" id="hours">00</span>
-            <span class="time-label">ore</span>
-          </div>
-          <span class="separator">:</span>
-          <div class="time-box">
-            <span class="time-value" id="minutes">00</span>
-            <span class="time-label">minuti</span>
-          </div>
-          <span class="separator">:</span>
-          <div class="time-box">
-            <span class="time-value" id="seconds">00</span>
-            <span class="time-label">secondi</span>
-          </div>
+        <h1 id="title"></h1>
+        <p class="subtitle" id="subtitle"></p>
+        <div class="countdown">
+          <div><strong id="days">00</strong><span>giorni</span></div><i>:</i>
+          <div><strong id="hours">00</strong><span>ore</span></div><i>:</i>
+          <div><strong id="minutes">00</strong><span>minuti</span></div><i>:</i>
+          <div><strong id="seconds">00</strong><span>secondi</span></div>
         </div>
-
         <p class="hint" id="dateHint"></p>
       </div>
 
-      <div class="result" id="result" hidden>
-        <div class="result-sparkles" aria-hidden="true">✦　✧　✦</div>
+      <div id="discover" hidden>
+        <p class="eyebrow">Il momento è arrivato!</p>
+        <h2>Pronti a scoprire?</h2>
+        <p class="subtitle">La sorpresa è nelle vostre mani…</p>
+        <button id="discoverButton" type="button">SCOPRI</button>
+      </div>
+
+      <div id="result" hidden>
         <p class="eyebrow">La sorpresa è arrivata!</p>
         <h2 id="resultText"></h2>
-        <p class="result-message" id="resultMessage"></p>
+        <p class="subtitle" id="resultMessage"></p>
       </div>
     </section>
   </main>
-
-  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
-
+  <canvas id="confettiCanvas"></canvas>
   <script src="script.js"></script>
 </body>
 </html>
