@@ -1,67 +1,205 @@
-:root{
-  --blue:#a9d7f5;--blueDeep:#68b7e8;--pink:#f5b8c9;--pinkDeep:#e98fa9;--ink:#505563
+:root {
+    --bg-color-1: #e0f2fe; /* Azzurro tenue */
+    --bg-color-2: #fce7f3; /* Rosa tenue */
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --text-color: #334155;
+    --accent-blue: #38bdf8;
+    --accent-pink: #f472b6;
 }
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;width:100%}
-body{
-  overflow:hidden;font-family:"DM Sans",system-ui,sans-serif;color:var(--ink);
-  background:
-    radial-gradient(circle at 15% 20%,rgba(169,215,245,.75),transparent 35%),
-    radial-gradient(circle at 85% 25%,rgba(245,184,201,.72),transparent 35%),
-    linear-gradient(135deg,#edf8ff,#fff8fb,#eef8ff);
-  transition:background 1.8s ease
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
-body.male{background:
-  radial-gradient(circle at 20% 20%,rgba(169,215,245,.9),transparent 40%),
-  radial-gradient(circle at 85% 80%,rgba(129,194,235,.75),transparent 42%),
-  linear-gradient(135deg,#eaf7ff,#d9efff,#eef9ff)}
-body.female{background:
-  radial-gradient(circle at 20% 20%,rgba(250,199,214,.9),transparent 40%),
-  radial-gradient(circle at 85% 80%,rgba(239,155,180,.75),transparent 42%),
-  linear-gradient(135deg,#fff0f5,#ffe3ec,#fff3f7)}
-.page{min-height:100vh;display:grid;place-items:center;padding:24px}
-.card{
-  width:min(920px,100%);min-height:570px;padding:60px 45px;display:grid;place-items:center;
-  position:relative;overflow:hidden;text-align:center;border-radius:32px;
-  background:rgba(255,255,255,.74);border:1px solid rgba(255,255,255,.85);
-  box-shadow:0 24px 70px rgba(83,88,105,.14);backdrop-filter:blur(18px);
-  transition:background 1.8s ease,box-shadow 1.8s ease
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2));
+    overflow: hidden;
+    color: var(--text-color);
+    transition: background 1.5s ease;
 }
-.male .card{box-shadow:0 24px 70px rgba(77,151,201,.18)}
-.female .card{box-shadow:0 24px 70px rgba(207,116,146,.18)}
-#intro,#discover,#result{width:100%;animation:fadeUp .8s ease both}
-.eyebrow{margin:0 0 14px;text-transform:uppercase;letter-spacing:.22em;font-size:12px;font-weight:700;opacity:.58}
-h1,h2{margin:0;font-family:"Playfair Display",Georgia,serif;font-weight:600;line-height:1.08}
-h1{font-size:clamp(42px,7vw,74px)}
-h2{font-size:clamp(46px,8vw,82px)}
-.subtitle{max-width:620px;margin:20px auto 0;font-size:clamp(16px,2.2vw,20px);line-height:1.6;opacity:.72}
-.countdown{margin:48px auto 22px;display:flex;align-items:center;justify-content:center;gap:clamp(8px,2vw,20px)}
-.countdown div{min-width:clamp(64px,11vw,130px)}
-.countdown strong{display:block;font-size:clamp(38px,7vw,72px);line-height:1;font-variant-numeric:tabular-nums}
-.countdown span{display:block;margin-top:10px;font-size:11px;text-transform:uppercase;letter-spacing:.13em;opacity:.52}
-.countdown i{align-self:flex-start;margin-top:4px;font-size:clamp(28px,5vw,50px);opacity:.32}
-.hint{font-size:13px;opacity:.5}
-#result h2{color:var(--blueDeep);animation:resultPop 1s cubic-bezier(.2,.8,.2,1) both}
-.female #result h2{color:var(--pinkDeep)}
-#discover h2{font-size:clamp(42px,7vw,68px)}
-button{
-  margin-top:36px;min-width:230px;padding:20px 44px;border:0;border-radius:999px;
-  background:linear-gradient(135deg,#9fd5f3,#f2b7ca);color:#fff;
-  font:700 18px "DM Sans",sans-serif;letter-spacing:.18em;cursor:pointer;
-  box-shadow:0 12px 35px rgba(112,164,202,.28);
-  animation:pulse 2.2s ease-in-out infinite;transition:transform .25s,box-shadow .25s
+
+/* Canvas sfondi */
+#bg-canvas, #confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
-button:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 18px 42px rgba(112,164,202,.38)}
-button:active{transform:scale(.97)}
-.male button{background:linear-gradient(135deg,#8bc8ed,#63afe1)}
-.female button{background:linear-gradient(135deg,#f2a9c0,#e889a6)}
-.decor{position:absolute;font:28px Georgia,serif;opacity:.45;animation:float 6s ease-in-out infinite}
-.d1{top:12%;left:9%;color:var(--blueDeep)}.d2{right:10%;top:20%;color:var(--pinkDeep);animation-delay:-2s}.d3{bottom:12%;left:13%;color:var(--pinkDeep);animation-delay:-4s}
-.male .decor{color:var(--blueDeep)}.female .decor{color:var(--pinkDeep)}
-#confettiCanvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:20}
-@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
-@keyframes resultPop{0%{opacity:0;transform:scale(.72)}65%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
-@keyframes pulse{0%,100%{box-shadow:0 12px 35px rgba(112,164,202,.25),0 0 0 0 rgba(169,215,245,.2)}50%{box-shadow:0 16px 42px rgba(112,164,202,.35),0 0 0 12px rgba(169,215,245,.05)}}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-16px) rotate(5deg)}}
-@media(max-width:600px){.card{min-height:520px;padding:42px 18px}.countdown{gap:6px}.countdown span{font-size:9px;letter-spacing:.08em}button{min-width:200px;padding:18px 34px;font-size:16px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important}}
+
+#confetti-canvas {
+    z-index: 10;
+}
+
+/* Container & Card */
+.container {
+    position: relative;
+    z-index: 5;
+    width: 90%;
+    max-width: 650px;
+    padding: 20px;
+}
+
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 1s ease;
+}
+
+h1 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1e293b;
+}
+
+.subtitle {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    color: #64748b;
+    margin-bottom: 35px;
+    font-weight: 300;
+}
+
+/* Countdown Grid */
+.countdown-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 15px 10px;
+    border-radius: 14px;
+    min-width: 75px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.time-value {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.1;
+}
+
+.time-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+.separator {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-top: -15px;
+}
+
+/* Pulsante SCOPRI con effetto Glow */
+.hidden {
+    display: none !important;
+}
+
+#reveal-container {
+    margin-top: 25px;
+    animation: fadeIn 1s ease;
+}
+
+.glow-button {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    border: none;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 15px 50px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+    animation: pulseGlow 2s infinite;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glow-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
+}
+
+.glow-button:active {
+    transform: scale(0.98);
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(236, 72, 153, 0.9), 0 0 50px rgba(168, 85, 247, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+    }
+}
+
+/* Risultato Finale */
+.result-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(4rem, 10vw, 7rem);
+    animation: scaleUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    margin-top: 10px;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive per smartphone */
+@media (max-width: 480px) {
+    .glass-card {
+        padding: 25px 15px;
+    }
+    .countdown-grid {
+        gap: 8px;
+    }
+    .time-box {
+        min-width: 60px;
+        padding: 10px 5px;
+    }
+    .separator {
+        font-size: 1.5rem;
+    }
+}
