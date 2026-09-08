@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#eaf5ff">
+  <title>Il grande momento</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-left"></div>
+  <div class="ambient ambient-right"></div>
+
+  <main class="page">
+    <section class="reveal-card" id="revealCard" aria-live="polite">
+      <div class="decor decor-one">✦</div>
+      <div class="decor decor-two">✧</div>
+      <div class="decor decor-three">♡</div>
+
+      <div class="intro" id="intro">
+        <p class="eyebrow">Il grande momento</p>
+        <h1 id="title">Il grande momento sta arrivando…</h1>
+        <p class="subtitle" id="subtitle">
+          Manca sempre meno per scoprire chi sta arrivando!
+        </p>
+
+        <div class="countdown" id="countdown" aria-label="Conto alla rovescia">
+          <div class="time-box">
+            <span class="time-value" id="days">00</span>
+            <span class="time-label">giorni</span>
+          </div>
+          <span class="separator">:</span>
+          <div class="time-box">
+            <span class="time-value" id="hours">00</span>
+            <span class="time-label">ore</span>
+          </div>
+          <span class="separator">:</span>
+          <div class="time-box">
+            <span class="time-value" id="minutes">00</span>
+            <span class="time-label">minuti</span>
+          </div>
+          <span class="separator">:</span>
+          <div class="time-box">
+            <span class="time-value" id="seconds">00</span>
+            <span class="time-label">secondi</span>
+          </div>
+        </div>
+
+        <p class="hint" id="dateHint"></p>
+      </div>
+
+      <div class="result" id="result" hidden>
+        <div class="result-sparkles" aria-hidden="true">✦　✧　✦</div>
+        <p class="eyebrow">La sorpresa è arrivata!</p>
+        <h2 id="resultText"></h2>
+        <p class="result-message" id="resultMessage"></p>
+      </div>
+    </section>
+  </main>
+
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>
