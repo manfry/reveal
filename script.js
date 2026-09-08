@@ -2,7 +2,7 @@
    CONFIGURAZIONE (Modifica qui i parametri)
    ========================================== */
 // Data e ora di scadenza del countdown (Formato: "AAAA-MM-DDTHH:MM:SS")
-const TARGET_DATE = "2026-12-31T18:00:00"; 
+const TARGET_DATE = "2026-09-08T22:26:00"; 
 
 // Genere: "male" per Maschietto, "female" per Femminuccia
 const GENDER = "male"; 
