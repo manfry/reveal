@@ -1,6 +1,7 @@
 :root{
   --blue:#a9d7f5;--blueDeep:#68b7e8;--pink:#f5b8c9;--pinkDeep:#e98fa9;--ink:#505563
 }
+
 *{box-sizing:border-box}
 html,body{margin:0;min-height:100%;width:100%}
 body{
