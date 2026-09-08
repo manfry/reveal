@@ -1,96 +1,205 @@
-const CONFIG={
-  // Formato: AAAA-MM-GGTHH:MM:SS (ora locale del dispositivo)
-  revealDate:"2026-09-08T18:39:00",
-  // "male" oppure "female"
-  gender:"male",
-  texts:{
-    title:"Il grande momento sta arrivando…",
-    subtitle:"Manca sempre meno per scoprire chi sta arrivando!",
-    maleResult:"Maschietto!",
-    femaleResult:"Femminuccia!",
-    maleMessage:"Una nuova piccola avventura sta per cominciare.",
-    femaleMessage:"Una nuova piccola avventura sta per cominciare."
-  }
-};
-
-const $=id=>document.getElementById(id);
-const revealTime=new Date(CONFIG.revealDate).getTime();
-let revealed=false,timer;
-
-$("title").textContent=CONFIG.texts.title;
-$("subtitle").textContent=CONFIG.texts.subtitle;
-$("dateHint").textContent="Reveal: "+new Intl.DateTimeFormat("it-IT",{dateStyle:"full",timeStyle:"short"}).format(new Date(revealTime));
-
-function pad(n){return String(n).padStart(2,"0")}
-
-function updateCountdown(){
-  const diff=revealTime-Date.now();
-  if(diff<=0){clearInterval(timer);showDiscover();return}
-  const s=Math.floor(diff/1000);
-  $("days").textContent=pad(Math.floor(s/86400));
-  $("hours").textContent=pad(Math.floor(s%86400/3600));
-  $("minutes").textContent=pad(Math.floor(s%3600/60));
-  $("seconds").textContent=pad(s%60);
+:root {
+    --bg-color-1: #e0f2fe; /* Azzurro tenue */
+    --bg-color-2: #fce7f3; /* Rosa tenue */
+    --card-bg: rgba(255, 255, 255, 0.75);
+    --text-color: #334155;
+    --accent-blue: #38bdf8;
+    --accent-pink: #f472b6;
 }
 
-function showDiscover(){
-  if(revealed)return;
-  $("intro").hidden=true;
-  $("discover").hidden=false;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-$("discoverButton").addEventListener("click",()=>{
-  if(revealed)return;
-  revealed=true;
-  const male=CONFIG.gender.toLowerCase()==="male";
-  document.body.classList.add(male?"male":"female");
-  $("resultText").textContent=male?CONFIG.texts.maleResult:CONFIG.texts.femaleResult;
-  $("resultMessage").textContent=male?CONFIG.texts.maleMessage:CONFIG.texts.femaleMessage;
-  $("discover").hidden=true;
-  $("result").hidden=false;
-  launchConfetti(male?"male":"female");
-});
+body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-color-1), var(--bg-color-2));
+    overflow: hidden;
+    color: var(--text-color);
+    transition: background 1.5s ease;
+}
 
-// Confetti: esplosione centrale + pioggia dall'alto.
-const canvas=$("confettiCanvas"),ctx=canvas.getContext("2d");
-let pieces=[],frame;
-const palettes={
-  male:["#8fcdf1","#b9e1f8","#68b7e8","#d9f1ff","#ffffff"],
-  female:["#f2a9c0","#f8c7d7","#e98fae","#ffe0ea","#ffffff"]
-};
-function resize(){
-  const dpr=Math.min(devicePixelRatio||1,2);
-  canvas.width=innerWidth*dpr;canvas.height=innerHeight*dpr;
-  canvas.style.width=innerWidth+"px";canvas.style.height=innerHeight+"px";
-  ctx.setTransform(dpr,0,0,dpr,0,0);
+/* Canvas sfondi */
+#bg-canvas, #confetti-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
 }
-addEventListener("resize",resize);resize();
 
-function launchConfetti(gender){
-  if(matchMedia("(prefers-reduced-motion:reduce)").matches)return;
-  const palette=palettes[gender];pieces=[];
-  for(let i=0;i<180;i++){
-    const a=Math.random()*Math.PI*2,sp=4+Math.random()*8;
-    pieces.push({x:innerWidth/2,y:innerHeight/2,w:5+Math.random()*8,h:8+Math.random()*14,
-      vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-2,g:.10+Math.random()*.08,r:Math.random()*6.28,rs:(Math.random()-.5)*.2,
-      c:palette[Math.floor(Math.random()*palette.length)],life:0,max:170+Math.random()*130});
-  }
-  for(let i=0;i<100;i++){
-    pieces.push({x:Math.random()*innerWidth,y:-Math.random()*innerHeight,w:5+Math.random()*8,h:8+Math.random()*14,
-      vx:(Math.random()-.5)*2,vy:2+Math.random()*4,g:.02,r:Math.random()*6.28,rs:(Math.random()-.5)*.18,
-      c:palette[Math.floor(Math.random()*palette.length)],life:0,max:260+Math.random()*160});
-  }
-  cancelAnimationFrame(frame);animate();
+#confetti-canvas {
+    z-index: 10;
 }
-function animate(){
-  ctx.clearRect(0,0,innerWidth,innerHeight);
-  pieces.forEach(p=>{
-    p.x+=p.vx;p.y+=p.vy;p.vy+=p.g;p.r+=p.rs;p.life++;
-    ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);
-    ctx.globalAlpha=Math.max(0,1-p.life/p.max);ctx.fillStyle=p.c;
-    ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore();
-  });
-  pieces=pieces.filter(p=>p.life<p.max);
-  if(pieces.length)frame=requestAnimationFrame(animate);
+
+/* Container & Card */
+.container {
+    position: relative;
+    z-index: 5;
+    width: 90%;
+    max-width: 650px;
+    padding: 20px;
 }
-updateCountdown();timer=setInterval(updateCountdown,1000);
+
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 24px;
+    padding: 40px 30px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    text-align: center;
+    transition: all 1s ease;
+}
+
+h1 {
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: #1e293b;
+}
+
+.subtitle {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    color: #64748b;
+    margin-bottom: 35px;
+    font-weight: 300;
+}
+
+/* Countdown Grid */
+.countdown-grid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.time-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.6);
+    padding: 15px 10px;
+    border-radius: 14px;
+    min-width: 75px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+}
+
+.time-value {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.1;
+}
+
+.time-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #64748b;
+    margin-top: 5px;
+}
+
+.separator {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #94a3b8;
+    margin-top: -15px;
+}
+
+/* Pulsante SCOPRI con effetto Glow */
+.hidden {
+    display: none !important;
+}
+
+#reveal-container {
+    margin-top: 25px;
+    animation: fadeIn 1s ease;
+}
+
+.glow-button {
+    background: linear-gradient(135deg, #a855f7, #ec4899);
+    border: none;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 15px 50px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+    animation: pulseGlow 2s infinite;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glow-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
+}
+
+.glow-button:active {
+    transform: scale(0.98);
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(236, 72, 153, 0.9), 0 0 50px rgba(168, 85, 247, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(236, 72, 153, 0.5);
+    }
+}
+
+/* Risultato Finale */
+.result-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: clamp(4rem, 10vw, 7rem);
+    animation: scaleUp 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    margin-top: 10px;
+}
+
+@keyframes scaleUp {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive per smartphone */
+@media (max-width: 480px) {
+    .glass-card {
+        padding: 25px 15px;
+    }
+    .countdown-grid {
+        gap: 8px;
+    }
+    .time-box {
+        min-width: 60px;
+        padding: 10px 5px;
+    }
+    .separator {
+        font-size: 1.5rem;
+    }
+}
