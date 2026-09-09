@@ -1,63 +1,50 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gender Reveal</title>
-    <!-- Google Fonts per una tipografia elegante -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Gender Reveal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <!-- Canvas per lo sfondo animato con particelle e per i coriandoli -->
-    <canvas id="bg-canvas"></canvas>
-    <canvas id="confetti-canvas"></canvas>
+  
+  <main class="page">
+    <section class="card">
+      <div class="decor d1">✦</div><div class="decor d2">✧</div><div class="decor d3">♡</div>
 
-    <!-- Contenitore Principale -->
-    <main class="container">
-        <div class="glass-card" id="main-card">
-            
-            <!-- Header -->
-            <h1 id="main-title">Il grande momento sta arrivando...</h1>
-            <p id="subtitle" class="subtitle">Manca sempre meno per scoprire chi sta arrivando...</p>
-
-            <!-- Countdown -->
-            <div id="countdown-container" class="countdown-grid">
-                <div class="time-box">
-                    <span id="days" class="time-value">00</span>
-                    <span class="time-label">Giorni</span>
-                </div>
-                <div class="separator">:</div>
-                <div class="time-box">
-                    <span id="hours" class="time-value">00</span>
-                    <span class="time-label">Ore</span>
-                </div>
-                <div class="separator">:</div>
-                <div class="time-box">
-                    <span id="minutes" class="time-value">00</span>
-                    <span class="time-label">Minuti</span>
-                </div>
-                <div class="separator">:</div>
-                <div class="time-box">
-                    <span id="seconds" class="time-value">00</span>
-                    <span class="time-label">Secondi</span>
-                </div>
-            </div>
-
-            <!-- Sezione Reveal (nascosta finché il countdown non arriva a zero) -->
-            <div id="reveal-container" class="hidden">
-                <button id="reveal-btn" class="glow-button">SCOPRI</button>
-            </div>
-
-            <!-- Messaggio Finale (nascosto fino al click su SCOPRI) -->
-            <div id="result-container" class="hidden">
-                <h2 id="result-text" class="result-title"></h2>
-            </div>
-
+      <div id="intro">
+        <p class="eyebrow">Il grande momento sta arrivando</p>
+        <h1 id="title"></h1>
+        <p class="subtitle" id="subtitle"></p>
+        <div class="countdown">
+          <div><strong id="days">00</strong><span>giorni</span></div><i>:</i>
+          <div><strong id="hours">00</strong><span>ore</span></div><i>:</i>
+          <div><strong id="minutes">00</strong><span>minuti</span></div><i>:</i>
+          <div><strong id="seconds">00</strong><span>secondi</span></div>
         </div>
-    </main>
+        <p class="hint" id="dateHint"></p>
+      </div>
 
-    <script src="script.js"></script>
+      <div id="discover" hidden>
+        <p class="eyebrow">Il momento è arrivato!</p>
+        <h2>Pronti a scoprire?</h2>
+        <p class="subtitle">La sorpresa è nelle vostre mani…</p>
+        <button id="discoverButton" type="button">SCOPRI</button>
+      </div>
+
+      <div id="result" hidden>
+        <p class="eyebrow">La sorpresa è arrivata!</p>
+        <h2 id="resultText"></h2>
+        <p class="subtitle" id="resultMessage"></p>
+      </div>
+    </section>
+  </main>
+  <canvas id="confettiCanvas"></canvas>
+  <canvas id="bg-canvas"></canvas>
+  <script src="script.js"></script>
 </body>
 </html>
