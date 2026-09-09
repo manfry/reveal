@@ -1,8 +1,8 @@
 const CONFIG={
   // Formato: AAAA-MM-GGTHH:MM:SS (ora locale del dispositivo)
-  revealDate:"2026-09-09T12:41:00",
+  revealDate:"2026-09-09T18:00:00",
   // "male" oppure "female"
-  gender:"male",
+  gender:"female",
   texts:{
     title:"Sarà lui, sarà lei…",
     subtitle:"Manca sempre meno per scoprire chi sta arrivando!",
